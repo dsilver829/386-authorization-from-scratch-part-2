@@ -19,19 +19,6 @@ describe "Topic request" do
     page.should have_content("Foobar")
   end
 
-  it "updates topic as admin" do
-    create(:topic, name: "Old Name")
-    log_in admin: true
-    visit topics_path
-    page.should have_content("Old Name")
-    click_on "Edit"
-    fill_in "Name", with: "New Name"
-    click_on "Update Topic"
-    page.should have_content("Updated topic")
-    page.should have_content("New Name")
-    page.should_not have_content("Old Name")
-  end
-  
   it "cannot edit topic as guest" do
     topic = create(:topic)
     visit edit_topic_path(topic)
