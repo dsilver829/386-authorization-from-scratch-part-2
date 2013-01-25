@@ -6,6 +6,12 @@ RSpec::Matchers.define :allow do |*args|
   end
 end
 
+RSpec::Matchers.define :allow_param do |*args|
+  match do |permission|
+    permission.allow_param?(*args).should be_true
+  end
+end
+
 describe Permission do
   describe "as guest" do
     subject { Permission.new(nil) }
@@ -32,6 +38,7 @@ describe Permission do
     subject { Permission.new(build(:user, admin: true)) }
     
     it { should allow("anything", "here") }
+    it { should allow_param("anything", "here") }
   end
   
   describe "as member" do
@@ -56,6 +63,9 @@ describe Permission do
     it { should allow("sessions", "new") }
     it { should allow("sessions", "create") }
     it { should allow("sessions", "destroy") }
+
+    it { should allow_param "topic", "name" }
+    it { should_not allow_param "topic", "sticky" }
 
     it { should allow("users", "new") }
     it { should allow("users", "create") }
