@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe "Topic request" do
-  it "lists topics as guest" do
+feature "Topic request" do
+  scenario "Guest views topics" do
     create(:topic, name: "Hello")
     create(:topic, name: "World")
     visit topics_path
@@ -9,7 +9,7 @@ describe "Topic request" do
     page.should have_content("World")
   end
 
-  it "creates topic as member" do
+  scenario "Member creates a topic" do
     log_in admin: false
     visit topics_path
     click_on "New Topic"
@@ -19,20 +19,20 @@ describe "Topic request" do
     page.should have_content("Foobar")
   end
 
-  it "cannot edit topic as guest" do
+  scenario "Guest cannot edit topic" do
     topic = create(:topic)
     visit edit_topic_path(topic)
     page.should have_content("Not authorized")
   end
 
-  it "edits owned topic as member" do
+  scenario "Member edits his own topic" do
 		log_in admin: false
     topic = create(:topic, user: current_user)
     visit edit_topic_path(topic)
     page.should_not have_content("Not authorized")
   end
   
-  it "destroys topic as admin" do
+  scenario "Admin destroys topic" do
     create(:topic, name: "Oops")
     log_in admin: true
     visit topics_path
